@@ -72,7 +72,8 @@ del unla_text
 texts = np.array(unla_text)
 labels= np.array(unla_label)
 
-aa = random.shuffle(list(range(len(texts))))
+aa = list(range(len(texts)))
+random.shuffle(aa)
 texts = texts[aa]
 labels = np.array(labels[aa])
 
@@ -102,19 +103,20 @@ doc_labels[:-2*unla_num] = 0
 labels2 = {'train_label':doc_labels,'true_label':true_labels}
 labels2 = pd.DataFrame(labels2)
 
-aa = random.shuffle(list(range(len(doc_labels))))
+aa = list(range(len(true_labels)))
+random.shuffle(aa)
 text = np.array(text)[aa]
-doc_labels = np.array(doc_labels)[aa]
+doc_labels = doc_labels[aa]
 true_labels = np.array(true_labels)[aa]
 
 text.tolist
-text = text[0]
+#text = text[0]
 doc_labels.tolist
-doc_labels = doc_labels[0]
+#doc_labels = doc_labels[0]
 true_labels.tolist
-true_labels = true_labels[0]
+#true_labels = true_labels[0]
 ####enf of shuffled text!!!
-
+print(true_labels)
 
 documents = []
 for document in text:
@@ -147,9 +149,10 @@ beta = [0.05]
 for be in beta:
     print("start to train")
     t1 = time()
-    model_neighbor = Doc2Vec(sentences,doc_labels,learn_unlabel = 0,beta = be, size=d_size, window = 3, min_count=3, workers = 8, dbow_neighbor = 1,iter = 10)
+    model_neighbor = Doc2Vec(sentences,doc_labels,learn_unlabel = 0,beta = be, size=d_size, window = 3, min_count=3, workers = 8, dbow_neighbor = 0,iter = 10)
     print("end training: ",time()-t1)
-    file_name = '../results/amazon/doc2vec_dbow_neighbor_'+category+'_'+str(rr)+'_beta_'+str(be) +'.doc2vec'    
+    #file_name = '../results/amazon/doc2vec_dbow_neighbor2_'+category+'_'+str(rr)+'_beta_'+str(be) +'.doc2vec'    
+    file_name = '../results/amazon/doc2vec_dbow_'+category+'_'+str(rr)+'_beta_'+str(be) +'.doc2vec'    
     model_neighbor.save(file_name)      
 
     doctag = list(model_neighbor.docvecs.doctag_syn0)
@@ -158,7 +161,8 @@ for be in beta:
     doc2vec = pd.DataFrame(doc2vec)
 
 
-    f = open('../results/amazon/'+category+'_dbow_neighbor_'+str(rr)+'_beta_'+str(be)+'_data.pickle','wb')
+    #f = open('../results/amazon/'+category+'_dbow_neighbori2_'+str(rr)+'_beta_'+str(be)+'_data.pickle','wb')
+    f = open('../results/amazon/'+category+'_dbow_'+str(rr)+'_beta_'+str(be)+'_data.pickle','wb')
     pickle.dump(doc2vec,f)
     f.close()
 
